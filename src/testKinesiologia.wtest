@@ -1,0 +1,101 @@
+import pacientes.*
+import aparatos.*
+
+describe "test 1"{
+	const leonardo = new Paciente(edad=40, nivelDeDolor=10, nivelDeFortaleza=20)
+	const milena = new Paciente(edad=3, nivelDeDolor=30, nivelDeFortaleza=50)
+	const magneto = new Magneto()
+	const bici = new Bicicleta()
+	const ministramp = new Ministramp()
+	
+	test "Leonardo puede usar los tres aparatos creados"{
+		assert.that(leonardo.puedeUsar(magneto))
+		assert.that(leonardo.puedeUsar(bici))
+		assert.that(leonardo.puedeUsar(ministramp))
+	}
+	test "Milena puede usar sólo el magneto"{
+		assert.that(milena.puedeUsar(magneto))
+		assert.notThat(milena.puedeUsar(bici))
+		assert.notThat(milena.puedeUsar(ministramp))
+	}
+	test "Después de usar el magneto una vez, el nivel de dolor de Leonardo baja a 9"{
+		leonardo.usarObjeto(magneto)
+		assert.equals(9, leonardo.nivelDeDolor())
+	}
+	test "Después de usar el magneto una vez, el nivel de dolor de Milena baja a 27"{
+		milena.usarObjeto(magneto)
+		assert.equals(27, milena.nivelDeDolor())
+	}
+	test "Después de usar la bicicleta una vez, el nivel de dolor de Leonardo baja a 6, y la fortaleza sube a 23"{
+		leonardo.usarObjeto(bici)
+		assert.equals(6, leonardo.nivelDeDolor())
+		assert.equals(23, leonardo.nivelDeFortaleza())
+	}
+	test "Después de usar el minitramp una vez, la fortaleza de Leonardo sube a 24"{
+		leonardo.usarObjeto(ministramp)
+		assert.equals(24, leonardo.nivelDeFortaleza())
+	}
+}
+
+describe "test 2"{
+	const magneto = new Magneto()
+	const bici = new Bicicleta()
+	const ministramp = new Ministramp()
+	const leonardo = new Paciente(edad=40, nivelDeDolor=10, nivelDeFortaleza=20, rutina=[bici, ministramp, bici, magneto])
+	const milena = new Paciente(edad=3, nivelDeDolor=30, nivelDeFortaleza=50, rutina=[magneto, bici])
+	
+	test "Leonardo puede hacer la rutina que tiene asignada"{
+		assert.that(leonardo.puedeHacerLaRutina())
+	}
+	test "Leonardo al hacer su rutina su nivel de dolor baja a 1.8, y su fortaleza sube a 30"{
+		leonardo.sesionCompleta()
+		assert.equals(1.8, leonardo.nivelDeDolor())
+		assert.equals(30, leonardo.nivelDeFortaleza())
+		
+	}
+	test "Milena no puede hacer la rutina que tiene asignada."{
+		assert.notThat(milena.puedeHacerLaRutina())
+	}
+}
+
+describe "test 3"{
+	const magneto = new Magneto()
+	const magnetoVerde = new Magneto(color="verde")
+	const bici = new Bicicleta()
+	const ministramp = new Ministramp()
+	const biciRoja = new Bicicleta(color="rojo")
+	const biciBlanca = new Bicicleta(color="blanco")
+	const nicolas = new PacienteResistente(edad=40, nivelDeDolor=10, nivelDeFortaleza=20, rutina=([bici, ministramp, bici, magneto]))
+	const victoria = new PacienteCaprichoso(edad=30, nivelDeDolor=10, nivelDeFortaleza=40, rutina=([bici, ministramp, bici, magneto]))
+	const julian = new PacienteCaprichoso(edad=20, nivelDeDolor=54, nivelDeFortaleza=50, rutina=([biciRoja, magnetoVerde, biciBlanca]))
+	const zoe = new PacienteRapidaRecuperacion(edad=50, nivelDeDolor=14, nivelDeFortaleza=40, rutina=([bici, ministramp, bici, magneto]))
+
+	test "Nicolás puede hacer la rutina que tiene asignada."{
+		assert.that(nicolas.puedeHacerLaRutina())
+	}
+	test "Nicolas después de hacer la rutina, su nivel de dolor baja a 1.8, y su fortaleza sube a 34."{
+		nicolas.sesionCompleta()
+		assert.equals(1.8, nicolas.nivelDeDolor())
+		assert.equals(34, nicolas.nivelDeFortaleza())
+	}
+	test "Victoria no puede hacer la rutina que tiene asignada."{
+		assert.that(not victoria.puedeHacerLaRutina())
+	}
+	test "Julián puede hacer la rutina que tiene asignada"{
+		assert.that(julian.puedeHacerLaRutina())
+	}
+	test "Julián después de hacer la rutina, su nivel de dolor baja a 29.3, y su fortaleza sube a 62."{
+		julian.sesionCompleta()
+		assert.equals(29.3, julian.nivelDeDolor())
+		assert.equals(62, julian.nivelDeFortaleza())
+	}
+	test "Zoe puede hacer la rutina que tiene asignada."{
+		assert.that(zoe.puedeHacerLaRutina())
+	}
+	test "Después de asignar a 2 el valor de decremento de dolor, el nivel de dolor de Zoe baja a 3.4, y su fortaleza sube a 51."{
+		zoe.asignarDecremento(2)
+		zoe.sesionCompleta()
+		assert.equals(3.4, zoe.nivelDeDolor())
+		assert.equals(51, zoe.nivelDeFortaleza())
+	}
+}
